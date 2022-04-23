@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-@Component
 public class AuthorDaoJDBCTemplate implements  AuthorDao{
 
     private final JdbcTemplate jdbcTemplate;
@@ -18,7 +17,7 @@ public class AuthorDaoJDBCTemplate implements  AuthorDao{
     }
 
     @Override
-    public List<Author> findAuthorsByLastName(String lastName, Pageable pageable) {
+    public List<Author> findAllAuthorsByLastName(String lastName, Pageable pageable) {
         StringBuilder sb = new StringBuilder("select * from author where last_name = ? ");
 
         if(pageable.getSort().getOrderFor("first_name") != null) {

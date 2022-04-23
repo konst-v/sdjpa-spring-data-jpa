@@ -9,43 +9,44 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
 
+import javax.persistence.EntityManagerFactory;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ActiveProfiles("local")
 @DataJpaTest
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ComponentScan(basePackages = {"guru.springframework.jdbc.dao"})
-public class AuthorDaoJDBCTemplateTest {
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+public class AuthorDaoHibernateTest {
 
     @Autowired
-    JdbcTemplate jdbcTemplate;
+    EntityManagerFactory emf;
 
     AuthorDao authorDao;
 
     @BeforeEach
     void setup() {
-        authorDao = new AuthorDaoJDBCTemplate(jdbcTemplate);
+        authorDao = new AuthorDaoHibernate(emf);
     }
 
     @Test
-    void testFindAuthorsByLastName_SortByFirstName_page1() {
+    void findAuthorsByLastName() {
         List<Author> authors = authorDao.findAllAuthorsByLastName("Smith", PageRequest.of(0, 10,
-                Sort.by(Sort.Order.asc("first_name"))));
+                Sort.by(Sort.Order.desc("first_name"))));
+
         assertThat(authors).isNotNull();
-        assertEquals(authors.get(0).getFirstName(), "Ahmed");
+        assertThat(authors.size()).isEqualTo(10);
     }
 
     @Test
-    void testFindAuthorsByLastName_SortByFirstName_page2() {
-        List<Author> authors = authorDao.findAllAuthorsByLastName("Smith", PageRequest.of(1, 1,
-                Sort.by(Sort.Order.asc("first_name"))));
+    void findAuthorsByLastName_NoSort() {
+        List<Author> authors = authorDao.findAllAuthorsByLastName("Smith", PageRequest.of(0, 10));
+
         assertThat(authors).isNotNull();
-        assertEquals(authors.get(0).getFirstName(), "Ahmed");
+        assertThat(authors.size()).isEqualTo(10);
     }
+
 }

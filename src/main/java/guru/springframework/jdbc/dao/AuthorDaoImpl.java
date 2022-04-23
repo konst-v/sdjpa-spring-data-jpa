@@ -15,15 +15,15 @@ import java.util.List;
 @Component
 public class AuthorDaoImpl implements AuthorDao {
 
+    private AuthorRepository authorRepository;
+
     public AuthorDaoImpl(AuthorRepository authorRepository) {
         this.authorRepository = authorRepository;
     }
 
-    private AuthorRepository authorRepository;
-
     @Override
-    public List<Author> findAuthorsByLastName(String lastName, Pageable pageable) {
-        return null;
+    public List<Author> findAllAuthorsByLastName(String lastName, Pageable pageable) {
+        return authorRepository.findAuthorByLastName(lastName, pageable).getContent();
     }
 
     @Override

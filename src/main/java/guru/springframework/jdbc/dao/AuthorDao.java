@@ -10,7 +10,7 @@ import java.util.List;
  */
 public interface AuthorDao {
 
-    List<Author> findAuthorsByLastName(String lastName, Pageable pageable);
+    List<Author> findAllAuthorsByLastName(String lastName, Pageable pageable);
 
     Author getById(Long id);
 
